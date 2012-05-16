@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static double fmin(double a, double b)
+/*static double fmin(double a, double b)
 {
     return(a < b ? a : b);
 }
@@ -11,7 +11,7 @@ static double fmin(double a, double b)
 static double fmax(double a, double b)
 {
     return(a > b ? a : b);
-}
+}*/
 
 
 void anova(loess *one, loess *two, anova_struct *out)

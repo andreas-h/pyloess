@@ -42,14 +42,14 @@ narray = numeric.array
 nempty = numeric.empty
 nlogical_not = numpy.logical_not
 
-from scipy.sandbox.maskedarray.core import masked, nomask, mask_or, \
+from numpy.ma import masked, nomask, mask_or, \
      masked_array as marray
 
 import _lowess, _stl, _mloess
 
 
 #####---------------------------------------------------------------------------
-#--- --- STL ---
+#--- --- LOWESS ---
 #####---------------------------------------------------------------------------
 class lowess:
     """An object for robust locally weighted regression.
@@ -808,8 +808,8 @@ loess_anova = _mloess.anova
 
 ################################################################################
 if __name__ == '__main__':
-    from maskedarray.testutils import assert_almost_equal
-    from maskedarray import masked_values
+    from numpy.ma.testutils import assert_almost_equal
+    from numpy.ma import masked_values
     from numpy import fromiter
     import os
 
@@ -817,7 +817,7 @@ if __name__ == '__main__':
         NOx = marray([4.818, 2.849, 3.275, 4.691, 4.255, 5.064, 2.118, 4.602,
                       2.286, 0.970, 3.965, 5.344, 3.834, 1.990, 5.199, 5.283,
                       -9999, -9999, 3.752, 0.537, 1.640, 5.055, 4.937, 1.561])
-        NOx = maskedarray.masked_values(NOx, -9999)
+        NOx = masked_values(NOx, -9999)
         E = marray([0.831, 1.045, 1.021, 0.970, 0.825, 0.891, 0.71, 0.801,
                     1.074, 1.148, 1.000, 0.928, 0.767, 0.701, 0.807, 0.902,
                     -9999, -9999, 0.997, 1.224, 1.089, 0.973, 0.980, 0.665])

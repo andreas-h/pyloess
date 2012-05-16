@@ -8,9 +8,9 @@ from c_numpy cimport ndarray, npy_intp, \
 import numpy
 narray = numpy.array
 float_ = numpy.float_
-import maskedarray
-marray = maskedarray.masked_array
-getmaskarray = maskedarray.getmaskarray
+import numpy.ma as ma
+marray = ma.masked_array
+getmaskarray = ma.getmaskarray
 
 # NumPy must be initialized
 c_numpy.import_array()
@@ -98,12 +98,12 @@ cdef class loess_inputs:
         # Check the dimensions ........
         if self.x.ndim == 1:
             self.npar = 1
-            self.masked = maskedarray.mask_or(getmaskarray(self.x),
+            self.masked = ma.mask_or(getmaskarray(self.x),
                                               getmaskarray(self.y), 
                                               small_mask=False) 
         elif self.x.ndim == 2:
             self.npar = self.x.shape[-1]
-            self.masked = maskedarray.mask_or(getmaskarray(self.x).any(axis=1),
+            self.masked = ma.mask_or(getmaskarray(self.x).any(axis=1),
                                               getmaskarray(self.y),
                                               small_mask=False) 
         else:

@@ -42,7 +42,7 @@ from numpy.core.records import recarray
 from numpy.core import array as narray
 from numpy.core import empty as nempty
 
-import _lowess, _stl, _loess
+from pyloess import _lowess, _stl, _loess
 
 
 #####---------------------------------------------------------------------------
@@ -613,5 +613,5 @@ loess_anova = _loess.anova
 
 ################################################################################
 if __name__ == '__main__':
-    from maskedarray.testutils import assert_almost_equal
-    from maskedarray import masked_values
+    from numpy.ma.testutils import assert_almost_equal
+    from numpy.ma import masked_values

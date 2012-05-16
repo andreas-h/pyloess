@@ -13,20 +13,21 @@ __date__     = '$Date$'
 
 import os
 
+import nose
 import numpy
 from numpy import bool_, complex_, float_, int_, str_, object_
 import numpy.core.numeric as numeric
 fromiter = numpy.fromiter
 
-from scipy.sandbox import maskedarray
+import numpy.ma as maskedarray
 marray = maskedarray.masked_array
 masked_values = maskedarray.masked_values
 
 from numpy.testing import *
-from scipy.sandbox.maskedarray.testutils import build_err_msg, \
+from numpy.ma.testutils import build_err_msg, \
         assert_equal, assert_almost_equal
 
-from scipy.sandbox.pyloess.mpyloess import lowess, stl, loess, loess_anova
+from pyloess.mpyloess import lowess, stl, loess, loess_anova
 
 #####---------------------------------------------------------------------------
 #---- --- LOWESS ---

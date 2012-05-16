@@ -13,6 +13,7 @@ __date__     = '$Date$'
 
 import os
 
+import nose
 import numpy
 from numpy import bool_, complex_, float_, int_, str_, object_
 import numpy.core.numeric as numeric
@@ -23,7 +24,7 @@ narray = numpy.array
 
 from numpy.testing import *
 
-from scipy.sandbox.pyloess import lowess, stl, loess, loess_anova
+from pyloess import lowess, stl, loess, loess_anova
 
 data_path, _ = os.path.split(__file__)
 
