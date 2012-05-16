@@ -36,17 +36,13 @@ __date__     = '$Date$'
 
 import numpy
 from numpy import bool_, complex_, float_, int_, str_, object_
-import numpy.core.numeric as numeric
-from numpy.core.records import recarray
+from numpy import array, recarray, empty, fromiter, logical_not
 
-from numpy.core import array as narray
-from numpy.core import empty as nempty
-
-from pyloess import _lowess, _stl, _loess
+import _lowess, _stl, _loess
 
 
 #####---------------------------------------------------------------------------
-#--- --- STL ---
+#--- --- FLOWESS ---
 #####---------------------------------------------------------------------------
 def flowess(x,y,span=0.5,nsteps=2,delta=0):
     """Performs a robust locally weighted regression (lowess).
@@ -148,8 +144,8 @@ References
     35:54.
 
     """
-    x = narray(x, copy=False, subok=True, dtype=float_)
-    y = narray(y, copy=False, subok=True, dtype=float_)
+    x = array(x, copy=False, subok=True, dtype=float_)
+    y = array(y, copy=False, subok=True, dtype=float_)
     if x.size != y.size:
         raise ValueError("Incompatible size between observations and response!")
 
@@ -224,8 +220,8 @@ References
         A (n,) float ndarray of responses (sorted by increasing x).
         """
         def __init__(self, x, y):
-            x = narray(x, copy=False, subok=True, dtype=float_).ravel()
-            y = narray(y, copy=False, subok=True, dtype=float_).ravel()
+            x = array(x, copy=False, subok=True, dtype=float_).ravel()
+            y = array(y, copy=False, subok=True, dtype=float_).ravel()
             if x.size != y.size:
                 msg = "Incompatible size between observations (%s) and response (%s)!"
                 raise ValueError(msg % (x.size, y.size))
@@ -308,9 +304,9 @@ References
         A (n,) ndarray of robust weights (readonly).
         """
         def __init__(self, n):
-            self._fval = nempty((n,), float_)
-            self._rw = nempty((n,), float_)
-            self._fres = nempty((n,), float_)
+            self._fval = empty((n,), float_)
+            self._rw = empty((n,), float_)
+            self._fres = empty((n,), float_)
         #.....
         fitted_values = property(fget=lambda self:self._fval)
         robust_weights = property(fget=lambda self:self._rw)
@@ -481,12 +477,12 @@ Reference
 
     if hasattr(y,'_mask') and numpy.any(y._mask):
         raise ValueError,"Missing values should first be filled !"
-    y = numeric.array(y, subok=True, copy=False).ravel()
+    y = array(y, subok=True, copy=False).ravel()
     (rw,szn,trn,work) = _stl.stl(y,np,ns,nt,nl,isdeg,itdeg,ildeg,
                                  nsjump,ntjump,nljump,ni,no,)
     dtyp = [('trend', float_), ('seasonal', float_),
             ('residuals', float_), ('weights', float_)]
-    result = numeric.fromiter(zip(trn,szn,y-trn-szn,rw), dtype=dtyp)
+    result = fromiter(zip(trn,szn,y-trn-szn,rw), dtype=dtyp)
     return result.view(recarray)
 
 #####---------------------------------------------------------------------------
@@ -611,7 +607,3 @@ loess : locally weighted estimates. Multi-variate version
 
 loess_anova = _loess.anova
 
-################################################################################
-if __name__ == '__main__':
-    from numpy.ma.testutils import assert_almost_equal
-    from numpy.ma import masked_values

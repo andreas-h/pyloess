@@ -98,14 +98,27 @@ cdef class loess_inputs:
         # Check the dimensions ........
         if self.x.ndim == 1:
             self.npar = 1
-            self.masked = ma.mask_or(getmaskarray(self.x),
-                                              getmaskarray(self.y), 
-                                              small_mask=False) 
+            if isinstance(ma.mask_or(getmaskarray(self.x),
+                                     getmaskarray(self.y)), numpy.bool_):
+                self.masked = numpy.ones(getmaskarray(self.x).shape,
+                                         dtype=numpy.bool_) * \
+                              ma.mask_or(getmaskarray(self.x),
+                                         getmaskarray(self.y))
+            else:
+                self.masked = ma.mask_or(getmaskarray(self.x),
+                                         getmaskarray(self.y))
+
         elif self.x.ndim == 2:
             self.npar = self.x.shape[-1]
-            self.masked = ma.mask_or(getmaskarray(self.x).any(axis=1),
-                                              getmaskarray(self.y),
-                                              small_mask=False) 
+            if isinstance(ma.mask_or(getmaskarray(self.x).any(axis=1),
+                                     getmaskarray(self.y)), numpy.bool_):
+                self.masked = numpy.ones(getmaskarray(self.y).shape,
+                                         dtype=numpy.bool_) * \
+                              ma.mask_or(getmaskarray(self.x).any(axis=1),
+                                         getmaskarray(self.y))
+            else:
+                self.masked = ma.mask_or(getmaskarray(self.x).any(axis=1),
+                                         getmaskarray(self.y))
         else:
             raise ValueError("The array of indepedent varibales should be 2D at most!")
         self.nobs = len(self.x)         

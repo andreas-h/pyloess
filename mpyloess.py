@@ -36,14 +36,15 @@ __date__     = '$Date$'
 
 import numpy
 from numpy import bool_, complex_, float_, int_, str_, object_
-import numpy.core.numeric as numeric
-from numpy.core.records import recarray
-narray = numeric.array
-nempty = numeric.empty
-nlogical_not = numpy.logical_not
+from numpy import array, recarray, empty, logical_not
 
-from numpy.ma import masked, nomask, mask_or, \
-     masked_array as marray
+#import numpy.core.numeric as numeric
+#from numpy.core.records import recarray
+#narray = numeric.array
+#nempty = numeric.empty
+#logical_not = numpy.logical_not
+
+from numpy.ma import masked, nomask, mask_or, masked_array
 
 import _lowess, _stl, _mloess
 
@@ -109,8 +110,8 @@ References
 
         """
         def __init__(self, x, y):
-            x = marray(x, copy=False, subok=True, dtype=float_, order='F').ravel()
-            y = marray(y, copy=False, subok=True, dtype=float_, order='F').ravel()
+            x = masked_array(x, copy=False, subok=True, dtype=float_, order='F').ravel()
+            y = masked_array(y, copy=False, subok=True, dtype=float_, order='F').ravel()
             if x.size != y.size:
                 msg = "Incompatible size between observations (%s) and response (%s)!"
                 raise ValueError(msg % (x.size, y.size))
@@ -118,7 +119,7 @@ References
             self._x = x[idx]
             self._y = y[idx]
             self._mask = mask_or(self._x._mask, self._y._mask,
-                                 copy=False, small_mask=False)
+                                 copy=False)
         #.....
         x = property(fget=lambda self:self._x)
         y = property(fget=lambda self:self._y)
@@ -195,9 +196,9 @@ References
         A (n,) ndarray of robust weights (readonly).
         """
         def __init__(self, n):
-            self._fval = marray(nempty((n,), dtype=float_, order='F'))
-            self._rw = marray(nempty((n,), dtype=float_, order='F'))
-            self._fres = marray(nempty((n,), dtype=float_, order='F'))
+            self._fval = masked_array(empty((n,), dtype=float_, order='F'))
+            self._rw = masked_array(empty((n,), dtype=float_, order='F'))
+            self._fres = masked_array(empty((n,), dtype=float_, order='F'))
         #.....
         fitted_values = property(fget=lambda self:self._fval)
         robust_weights = property(fget=lambda self:self._rw)
@@ -237,7 +238,7 @@ References
         # Check the mask .........
         mask = self.inputs._mask
         if mask.any():
-            unmask = nlogical_not(mask)
+            unmask = logical_not(mask)
             (x, y) = (self.inputs._x[unmask], self.inputs._y[unmask])
         else:
             unmask = slice(None,None)
@@ -267,7 +268,7 @@ References
 class stl:
     class _inputs:
         def __init__(self, y):
-            self.y = marray(y, subok=True, copy=False).ravel()
+            self.y = masked_array(y, subok=True, copy=False).ravel()
             self._mask = self.y._mask
             if self._mask.any():
                 raise ValueError("Masked arrays should be filled first!")
@@ -545,10 +546,10 @@ class stl:
         Local robust weights. The final local robust weights are all 1 if no=0.
         """
         def __init__(self, n):
-            self._seasonal = marray(nempty((n,), float_))
-            self._trend = marray(nempty((n,), float_))
-            self._weights = marray(nempty((n,), float_))
-            self._residuals = marray(nempty((n,), float_))
+            self._seasonal = masked_array(empty((n,), float_))
+            self._trend = masked_array(empty((n,), float_))
+            self._weights = masked_array(empty((n,), float_))
+            self._residuals = masked_array(empty((n,), float_))
         #.....
         seasonal = property(fget=lambda self:self._seasonal)
         trend = property(fget=lambda self:self._trend)
@@ -649,7 +650,7 @@ class stl:
         if mask is nomask:
             unmask = slice(None,None)
         else:
-            unmask = nlogical_not(mask)
+            unmask = logical_not(mask)
         # Get the parameters ..........
         model = self.model
         (np, ns, nt, nl) = (model.np, model.ns, model.nt, model.nl)
@@ -806,37 +807,3 @@ Reference
 loess = _mloess.loess
 loess_anova = _mloess.anova
 
-################################################################################
-if __name__ == '__main__':
-    from numpy.ma.testutils import assert_almost_equal
-    from numpy.ma import masked_values
-    from numpy import fromiter
-    import os
-
-    if 1:
-        NOx = marray([4.818, 2.849, 3.275, 4.691, 4.255, 5.064, 2.118, 4.602,
-                      2.286, 0.970, 3.965, 5.344, 3.834, 1.990, 5.199, 5.283,
-                      -9999, -9999, 3.752, 0.537, 1.640, 5.055, 4.937, 1.561])
-        NOx = masked_values(NOx, -9999)
-        E = marray([0.831, 1.045, 1.021, 0.970, 0.825, 0.891, 0.71, 0.801,
-                    1.074, 1.148, 1.000, 0.928, 0.767, 0.701, 0.807, 0.902,
-                    -9999, -9999, 0.997, 1.224, 1.089, 0.973, 0.980, 0.665])
-        gas_fit_E = numpy.array([0.665, 0.949, 1.224])
-        newdata = numpy.array([0.6650000, 0.7581667, 0.8513333, 0.9445000,
-                               1.0376667, 1.1308333, 1.2240000])
-        coverage = 0.99
-
-        rfile = open(os.path.join('tests','gas_result'), 'r')
-        results = []
-        for i in range(8):
-            rfile.readline()
-            z = fromiter((float(v) for v in rfile.readline().rstrip().split()),
-                         float_)
-            results.append(z)
-        #
-        gas = loess(E,NOx)
-        gas.model.span = 2./3.
-        gas.fit()
-        assert_almost_equal(gas.outputs.fitted_values.compressed(), results[0], 6)
-        assert_almost_equal(gas.outputs.enp, 5.5, 1)
-        assert_almost_equal(gas.outputs.s, 0.3404, 4)
