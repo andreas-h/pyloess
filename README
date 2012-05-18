@@ -1,0 +1,115 @@
+Software for Locally-Weighted Regression       18 August 1992
+
+William S. Cleveland
+Eric Grosse
+Ming-Jen Shyu
+
+Locally-weighted regression, or loess, is a procedure for estimating a
+regression surface by a multivariate smoothing procedure: fitting a
+linear or quadratic function of the independent variables in a moving
+fashion that is analogous to how a moving average is computed for a
+time series. Compared to classical approaches  - fitting global
+parametric functions - loess substantially increases the domain of
+surfaces that can be estimated without distortion. Also, a pleasant
+fact about loess is that analogues of the statistical procedures used
+in parametric function fitting - for example, ANOVA and t intervals -
+involve statistics whose distributions are well approximated by
+familiar distributions.
+
+The follwing files are included in this distribution.
+	README		the instruction file you are reading now
+	S.h		header file
+	air.c		C source for air data example
+	changes		history of changes to loess
+	depend.ps	PostScript figure of how routines are related
+	ethanol.c	C source for ethanol data example
+	galaxy.c	C source for galaxy data example
+	gas.c		C source for gas data example
+	loess.c		C source (high-level loess routines)
+	loess.h		header file for loess_struct and predict_struct
+	loess.m		manual page for user-callable loess routines
+	loessc.c	C source (low-level loess routines)
+	loessf.f	FORTRAN source (low-level loess & predict routines)
+	loessf.m	documentation for FORTRAN source
+	madeup.c	C source for madeup data example
+	makefile	makefile to compile the example codes
+	misc.c		C source (anova, pointwise, and other support routines)
+	predict.c	C source (high-level predict routines)
+	predict.m	manual page for user-callable predict routines
+	struct.m	manual page for loess_struct, pred_struct
+	supp.f		supplemental Fortran loess drivers
+
+After unpacking these files, just type "make" and if all goes well
+you should see output like:
+
+	loess(&gas):
+	Number of Observations: 22
+	Equivalent Number of Parameters: 5.5
+	Residual Standard Error: 0.3404
+	
+	loess(&gas_null):
+	Number of Observations: 22
+	Equivalent Number of Parameters: 3.5
+	Residual Standard Error: 0.5197
+	
+	predict(gas_fit_E, m, &gas, &gas_pred):
+	1.19641 5.06875 0.523682
+	
+	pointwise(&gas_pred, m, coverage, &gas_ci):
+	1.98562 4.10981 5.48023 5.56651 3.52761 1.71062 1.47205
+	1.19641 3.6795 5.05571 5.13526 3.14366 1.19693 0.523682
+	0.407208 3.24919 4.63119 4.70401 2.7597 0.683247 -0.424684
+	
+	anova(&gas_null, &gas, &gas_anova):
+	2.5531 15.663 10.1397 0.000860102
+
+To run other examples, simply type "make galaxy", or "make ethanol", etc.
+
+If your loader complains about "-llinpack -lblas" in the makefile, change
+it to whatever your system prefers for accessing Linpack and the Blas.
+If necessary, these Fortran subroutines can be obtained by
+	mail netlib@netlib.bell-labs.com
+	send dnrm2 dsvdc dqrdc ddot dqrsl idamax from linpack core.
+
+A 50 page user guide, in PostScript form, is available by anonymous ftp.
+        ftp netlib.bell-labs.com
+        login: anonymous
+        password: <your email address>
+        binary
+        cd /netlib/a
+        get cloess.ps.Z
+        quit
+        uncompress cloess.ps
+This guide describes crucial steps in the proper analysis of data using
+loess.  Please read it.
+
+Bug reports are appreciated.  Send electronic mail to
+	ehg@netlib.bell-labs.com
+including the words "this is not spam" in the Subject line
+or send paper mail to
+	Eric Grosse
+	Bell Labs 2T-502
+	Murray Hill NJ 07974
+for problems with the Fortran inner core of the algorithm.  
+The C drivers were written by Ming-Jen Shyu, who left Bell Labs.  Eric will
+fix problems with them when he can.
+
+Remember that this is experimental software distributed free of charge
+and comes with no warranty!  Exercise professional caution.
+
+Happy Smoothing!
+
+/*
+ * The authors of this software are Cleveland, Grosse, and Shyu.
+ * Copyright (c) 1989, 1992 by AT&T.
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose without fee is hereby granted, provided that this entire notice
+ * is included in all copies of any software which is or includes a copy
+ * or modification of this software and in all copies of the supporting
+ * documentation for such software.
+ * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
+ * WARRANTY.  IN PARTICULAR, NEITHER THE AUTHORS NOR AT&T MAKE ANY
+ * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY
+ * OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
+ */
+

@@ -1,0 +1,117 @@
+%!
+/Courier-Bold findfont 10 scalefont setfont
+%draw a box
+%x y width height box
+/box { newpath
+	/height exch def
+	/width exch def
+	/y exch def
+	/x exch def
+	x width 2 div sub
+	y height 2 div sub moveto
+	width 0 rlineto
+	0 height rlineto
+	width neg 0 rlineto
+	closepath } def
+
+%draw a circle
+%x y radius circle
+/circle { newpath 0 360 arc } def
+
+%draw an ellipse
+%x y width height ellipse
+/ellipse { gsave
+	/height exch def
+	/width exch def
+	1 height width div scale
+	width height div mul
+	width 2 div
+	circle stroke
+	grestore } def
+
+%draw a centered label
+%x y str
+/label {
+	/str exch def
+	/y exch def
+	/x exch def
+	str stringwidth
+	pop /width exch def
+	x width 2 div sub
+	y 10 3 div sub moveto str show
+ } def
+
+%draw a line
+%x1 y1 x2 y2 drawline
+/drawline { 4 -2 roll moveto lineto stroke } def
+
+277 684 42 14 box stroke
+277 684 (lowesd) label
+349 630 42 14 box stroke
+349 630 (lowesf) label
+205 630 42 14 box stroke
+205 630 (lowesb) label
+155 565 42 14 box stroke
+155 565 (lowesr) label
+146 427 42 14 box stroke
+146 427 (lowese) label
+277 576 42 14 box stroke
+277 576 (lowesl) label
+203 464 42 14 box stroke
+203 464 (lofort) label
+81 576 42 14 box stroke
+81 576 (losave) label
+81 522 42 14 box stroke
+81 522 (lohead) label
+81 468 42 14 box stroke
+81 468 (loread) label
+405 540 42 14 box stroke
+405 540 (lowesa) label
+342 539 42 14 box stroke
+342 539 (lowesc) label
+92 461 134 434 drawline
+124.266363 435.502104 134.000000 434.000000 drawline
+134.000000 434.000000 128.592424 442.231532 drawline
+81 515 81 475 drawline
+77.000000 484.000000 81.000000 475.000000 drawline
+81.000000 475.000000 85.000000 484.000000 drawline
+81 569 81 529 drawline
+77.000000 538.000000 81.000000 529.000000 drawline
+81.000000 529.000000 85.000000 538.000000 drawline
+289 569 329 546 drawline
+319.203959 547.018615 329.000000 546.000000 drawline
+329.000000 546.000000 323.191728 553.953865 drawline
+154 558 146 434 drawline
+142.587739 443.238857 146.000000 434.000000 drawline
+146.000000 434.000000 150.571142 442.723799 drawline
+188 623 97 583 drawline
+103.629564 590.283466 97.000000 583.000000 drawline
+97.000000 583.000000 106.848776 582.959760 drawline
+204 623 203 471 drawline
+199.059296 480.026120 203.000000 471.000000 drawline
+203.000000 471.000000 207.059123 479.973490 drawline
+214 623 267 583 drawline
+257.406670 585.228906 267.000000 583.000000 drawline
+267.000000 583.000000 262.225925 591.614419 drawline
+199 623 160 572 drawline
+162.289620 581.579021 160.000000 572.000000 drawline
+160.000000 572.000000 168.644482 576.719420 drawline
+220 623 389 547 drawline
+379.151237 547.043173 389.000000 547.000000 drawline
+389.000000 547.000000 382.432359 554.339352 drawline
+202 623 148 434 drawline
+146.626394 443.752600 148.000000 434.000000 drawline
+148.000000 434.000000 154.318586 441.554831 drawline
+348 623 342 546 drawline
+338.711268 555.283547 342.000000 546.000000 drawline
+342.000000 546.000000 346.687091 554.662054 drawline
+353 623 400 547 drawline
+391.864262 552.550655 400.000000 547.000000 drawline
+400.000000 547.000000 398.668290 556.758409 drawline
+267 677 214 637 drawline
+218.774075 645.614419 214.000000 637.000000 drawline
+214.000000 637.000000 223.593330 639.228906 drawline
+286 677 339 637 drawline
+329.406670 639.228906 339.000000 637.000000 drawline
+339.000000 637.000000 334.225925 645.614419 drawline
+showpage
