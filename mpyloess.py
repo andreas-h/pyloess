@@ -35,8 +35,7 @@ __revision__ = "$Revision$"
 __date__     = '$Date$'
 
 import numpy
-from numpy import bool_, complex_, float_, int_, str_, object_
-from numpy import array, recarray, empty, logical_not
+from numpy import array, empty, float_, fromiter, logical_not, recarray
 
 #import numpy.core.numeric as numeric
 #from numpy.core.records import recarray
@@ -44,7 +43,7 @@ from numpy import array, recarray, empty, logical_not
 #nempty = numeric.empty
 #logical_not = numpy.logical_not
 
-from numpy.ma import masked, nomask, mask_or, masked_array
+from numpy.ma import masked_array, mask_or, nomask
 
 import _lowess, _stl, _mloess
 
@@ -793,12 +792,12 @@ Reference
 
     if hasattr(y,'_mask') and numpy.any(y._mask):
         raise ValueError,"Missing values should first be filled !"
-    y = numeric.array(y, subok=True, copy=False).ravel()
+    y = array(y, subok=True, copy=False).ravel()
     (rw,szn,trn,work) = _stl.stl(y,np,ns,nt,nl,isdeg,itdeg,ildeg,
                                  nsjump,ntjump,nljump,ni,no,)
     dtyp = [('trend', float_), ('seasonal', float_),
             ('residuals', float_), ('weights', float_)]
-    result = numeric.fromiter(zip(trn,szn,y-trn-szn,rw), dtype=dtyp)
+    result = fromiter(zip(trn,szn,y-trn-szn,rw), dtype=dtyp)
     return result.view(recarray)
 
 #####---------------------------------------------------------------------------
