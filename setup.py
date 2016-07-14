@@ -10,7 +10,7 @@ from os.path import join
 def configuration(parent_package='',top_path=None):
     from numpy.distutils.misc_util import Configuration
     from numpy.distutils.system_info import get_info, dict_append
-    confgr = Configuration('pyloess',parent_package,top_path)
+    confgr = Configuration('pyloess',parent_package,top_path, 'python')
     # Configuration of LOWESS
     confgr.add_extension('_lowess',
                          sources=[join('src', 'f_lowess.pyf'),
