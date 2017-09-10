@@ -1,3 +1,8 @@
+**This repository is up for adoption!!**
+
+As I'm not using with LOESS any more, I don't have the resources to invest any time in maintenance of this repository.  If anyone is interested in taking over, please let me know!
+
+
 pyloess: a numpy wrapper to lowess and stl.
 
 LOWESS
